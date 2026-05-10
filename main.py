@@ -1,5 +1,6 @@
 import sys
 from src.data.process_data import process_all_raw_data
+from src.features.build_features import build_dataset
 
 def main():
     if len(sys.argv) < 2:
@@ -12,7 +13,7 @@ def main():
         process_all_raw_data()
 
     elif comando == "features":
-        print("Gerando features...")
+        build_dataset()
 
     elif comando == "train":
         print("Treinando modelo...")
