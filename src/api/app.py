@@ -28,8 +28,6 @@ class PredictionInput(BaseModel):
     umidade_relativa_percentual: float
     precipitacao_mmdia: float
     vento_velocidade_ms: float
-    numero_dias_sem_chuva: float
-    risco_fogo: float
 
     class Config:
         json_schema_extra = {
@@ -40,9 +38,7 @@ class PredictionInput(BaseModel):
                 "temperatura_c": 41,
                 "umidade_relativa_percentual": 9,
                 "precipitacao_mmdia": 0,
-                "vento_velocidade_ms": 8,
-                "numero_dias_sem_chuva": 40,
-                "risco_fogo": 0.95
+                "vento_velocidade_ms": 8
             }
         }
 
@@ -66,13 +62,7 @@ def predict(data: PredictionInput):
             data.precipitacao_mmdia,
 
         "vento_velocidade_ms":
-            data.vento_velocidade_ms,
-        
-        "numero_dias_sem_chuva":
-            data.numero_dias_sem_chuva,
-
-        "risco_fogo":
-            data.risco_fogo
+            data.vento_velocidade_ms
     }])
 
     prediction = model.predict(input_data)[0]

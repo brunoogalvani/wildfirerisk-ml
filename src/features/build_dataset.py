@@ -58,16 +58,6 @@ def build_dataset():
         how="left"
     )
 
-    df_final["numero_dias_sem_chuva"] = (
-        df_final["numero_dias_sem_chuva"]
-        .fillna(0)
-    )
-
-    df_final["risco_fogo"] = (
-        df_final["risco_fogo"]
-        .fillna(0)
-    )
-
     df_final["focos"] = (
         df_final["focos"]
         .fillna(0)
@@ -92,9 +82,6 @@ def build_dataset():
             "umidade_relativa_percentual",
             "precipitacao_mmdia",
             "vento_velocidade_ms",
-
-            "numero_dias_sem_chuva",
-            "risco_fogo",
 
             "focos",
             "risco"

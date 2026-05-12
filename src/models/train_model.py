@@ -29,10 +29,7 @@ def train_model():
             "temperatura_c",
             "umidade_relativa_percentual",
             "precipitacao_mmdia",
-            "vento_velocidade_ms",
-
-            "numero_dias_sem_chuva",
-            "risco_fogo"
+            "vento_velocidade_ms"
         ]
     ]
 
