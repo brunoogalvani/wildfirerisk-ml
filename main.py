@@ -1,6 +1,7 @@
 import sys
 from src.data.process_data import process_all_raw_data
-from src.features.build_features import build_dataset
+from src.data.process_fire_data import process_fire_data
+from src.features.build_dataset import build_dataset
 from src.models.train_model import train_model
 
 def main():
@@ -13,7 +14,10 @@ def main():
     if comando == "process":
         process_all_raw_data()
 
-    elif comando == "features":
+    elif comando == "process-fire":
+        process_fire_data()
+
+    elif comando == "build":
         build_dataset()
 
     elif comando == "train":
