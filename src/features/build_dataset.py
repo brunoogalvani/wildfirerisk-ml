@@ -1,8 +1,8 @@
 from glob import glob
 from pathlib import Path
+from src.utils.climate_rules import estacao_seca
 
 import pandas as pd
-
 
 def build_dataset():
 
@@ -64,6 +64,14 @@ def build_dataset():
         .astype(int)
     )
 
+    df_final["estacao_seca"] = df_final.apply(
+        lambda row: estacao_seca(
+            row["uf"],
+            row["mes"]
+        ),
+        axis=1
+    )
+
     df_final["risco"] = (
         df_final["focos"]
         .apply(classificar_risco)
@@ -75,6 +83,7 @@ def build_dataset():
             "cidade",
             "ano",
             "mes",
+
             "latitude",
             "longitude",
 
@@ -82,6 +91,8 @@ def build_dataset():
             "umidade_relativa_percentual",
             "precipitacao_mmdia",
             "vento_velocidade_ms",
+
+            "estacao_seca",
 
             "focos",
             "risco"

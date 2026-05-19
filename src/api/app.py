@@ -1,4 +1,6 @@
 from pathlib import Path
+from src.utils.climate_rules import estacao_seca
+from src.utils.climate_rules import name_to_uf
 
 import joblib
 import pandas as pd
@@ -21,6 +23,7 @@ app = FastAPI(
 )
 
 class PredictionInput(BaseModel):
+    uf: str
     latitude: float
     longitude: float
     mes: int
@@ -32,6 +35,7 @@ class PredictionInput(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
+                "uf": "MATO GROSSO",
                 "latitude": -10.0,
                 "longitude": -55.0,
                 "mes": 8,
@@ -44,6 +48,23 @@ class PredictionInput(BaseModel):
 
 @app.post("/wildfire-risk")
 def predict(data: PredictionInput):
+
+    if data.mes < 1 or data.mes > 12:
+        return {
+            "error": "Mês inválido"
+        }
+
+    uf = name_to_uf(data.uf)
+
+    if not uf:
+        return {
+            "error": "UF inválida"
+        }
+
+    estacao = estacao_seca(
+        uf,
+        data.mes
+    )
 
     input_data = pd.DataFrame([{
 
@@ -62,7 +83,9 @@ def predict(data: PredictionInput):
             data.precipitacao_mmdia,
 
         "vento_velocidade_ms":
-            data.vento_velocidade_ms
+            data.vento_velocidade_ms,
+
+        "estacao_seca": estacao,
     }])
 
     prediction = model.predict(input_data)[0]
@@ -81,7 +104,7 @@ def predict(data: PredictionInput):
     return {
         "risk_level": prediction,
         "description": descriptions[prediction],
-        "probabilites": {
+        "probabilities": {
             classe: round(float(prob), 4)
             for classe, prob in zip(classes, probabilities)
         }

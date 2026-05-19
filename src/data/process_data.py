@@ -1,11 +1,12 @@
 from glob import glob
 import pandas as pd
 from pathlib import Path
+from src.utils.climate_rules import name_to_uf
 
 def process_all_raw_data():
     
     Path("./data/processed").mkdir(parents=True, exist_ok=True)
-    estados = ["AMAZONAS","PARÁ", "ACRE","MATO GROSSO","GOIÁS", "MINAS GERAIS"]
+    estados = ["AM", "PA", "AC", "MT", "GO", "MG"]
     colunas_utilizadas = [
         "datahora",
         "uf_nome",
@@ -27,10 +28,13 @@ def process_all_raw_data():
                 print(f"Colunas faltando em {nomeArquivo}.csv — ignorado")
                 continue
 
-            df = df[df["uf_nome"].isin(estados)]
             df = df[colunas_utilizadas].dropna()
 
             df = df.rename(columns={"uf_nome": "uf", "municipio_nome": "cidade"})
+
+            df["uf"] = df["uf"].apply(name_to_uf)
+
+            df = df[df["uf"].isin(estados)]
 
             df["data"] = pd.to_datetime(df["datahora"])
             df["ano"] = df["data"].dt.year

@@ -1,8 +1,8 @@
 from glob import glob
 from pathlib import Path
+from src.utils.climate_rules import name_to_uf
 
 import pandas as pd
-
 
 def process_fire_data():
 
@@ -11,14 +11,7 @@ def process_fire_data():
         exist_ok=True
     )
 
-    estados = [
-        "AMAZONAS",
-        "PARÁ",
-        "ACRE",
-        "MATO GROSSO",
-        "GOIÁS",
-        "MINAS GERAIS"
-    ]
+    estados = ["AM", "PA", "AC", "MT", "GO", "MG"]
 
     for caminho in glob("./data/fire_raw/*.csv"):
 
@@ -50,16 +43,16 @@ def process_fire_data():
                 )
                 continue
 
-            df = df[
-                df["estado"].isin(estados)
-            ]
-
             df = df[colunas_utilizadas]
 
             df = df.rename(columns={
                 "estado": "uf",
                 "municipio": "cidade"
             })
+
+            df["uf"] = df["uf"].apply(name_to_uf)
+
+            df = df[df["uf"].isin(estados)]
 
             df["data"] = pd.to_datetime(
                 df["data_pas"],
