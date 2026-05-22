@@ -15,11 +15,7 @@ model = joblib.load(MODEL_PATH)
 
 app = FastAPI(
     title="Wildfire Risk API",
-    version="1.0.0",
-    description="""
-    API for wildfire risk prediction using climate
-    and historical fire occurrence data.
-    """
+    version="1.0.0"
 )
 
 class PredictionInput(BaseModel):
